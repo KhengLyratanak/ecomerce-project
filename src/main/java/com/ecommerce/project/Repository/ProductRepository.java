@@ -1,0 +1,25 @@
+package com.ecommerce.project.Repository;
+
+import com.ecommerce.project.Entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
+
+@Repository
+public interface ProductRepository extends JpaRepository<Product,Long> {
+    @Query("SELECT p FROM Product p WHERE"+
+            "(:name IS NULL OR LOWER(p.productName) LIKE %:name%) AND" +
+            "(:minPrice IS NULL OR p.price >= :minPrice) AND" +
+            "(:maxPrice IS NULL OR p.price <= :maxPrice)"
+    )
+    List<Product> findProductWithFilters(
+            @Param("name") String name,
+            @Param("minPrice") Double minPrice,
+            @Param("maxPrice") Double maxPrice
+    );
+     Boolean existsByProductName(String productName);
+}
