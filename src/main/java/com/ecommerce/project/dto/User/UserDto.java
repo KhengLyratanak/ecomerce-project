@@ -3,6 +3,7 @@ package com.ecommerce.project.dto.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,11 +17,16 @@ public class UserDto {
     @NotNull(message = "password is required")
     private String password;
 
+    @Size(min = 5,max = 50,message = "address must be between 5 and 50 charecters")
     private String address;
 
     @NotNull(message = "email is required")
     @Email(message = "email must be valid")
     private  String email;
+
+    @NotNull(message = "phone number is required")
+    @Size(min = 8,max = 12,message = "phone number must be between 8-12")
     private String phone;
+
     private String role= "USER";
 }

@@ -5,6 +5,7 @@ import com.ecommerce.project.Mapper.UserMapper;
 import com.ecommerce.project.Model.BaseResponseModel;
 import com.ecommerce.project.Model.BaseResponseModelWithData;
 import com.ecommerce.project.Repository.UserRepository;
+import com.ecommerce.project.dto.User.ChangeUserPasswordDto;
 import com.ecommerce.project.dto.User.UserDto;
 import com.ecommerce.project.dto.User.UserResponseDto;
 import com.ecommerce.project.exception.Model.DuplicateResourceException;
@@ -14,10 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -50,7 +48,7 @@ public class UserService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("user not found with id :"  +userId));
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(new BaseResponseModelWithData("success","successfully retrieved user id:",userId));
+                    .body(new BaseResponseModelWithData("success","successfully retrieved user id:",user));
     }
     public ResponseEntity<BaseResponseModel> updateUser(UserDto payload,Long userId){
         User existing = userRepository.findById(userId)
@@ -61,6 +59,25 @@ public class UserService {
         userRepository.save(existing);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new BaseResponseModel("success","successfully updated user "));
+    }
+    public ResponseEntity<BaseResponseModel> changePassword( ChangeUserPasswordDto dto,Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("user not found with id :" +userId));
+        //if current password not the same with oldpassword
+        if (!Objects.equals(user.getPassword(),dto.getOldPassword())){
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT)
+                    .body(new BaseResponseModel("fail" , "old password is incorrect,please return the correct password"));
+        }
+        if (!Objects.equals(dto.getNewPassword(),dto.getConfirmPassword())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new BaseResponseModel("fail","new password and confirm password must be the same"));
+        }
+        mapper.updateEntityChangePassword(user,dto.getConfirmPassword());
+        userRepository.save(user);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new BaseResponseModel("success","successfully changed password"));
     }
     public ResponseEntity<BaseResponseModel> deleteUser(Long userId){
         if (!userRepository.existsById(userId))

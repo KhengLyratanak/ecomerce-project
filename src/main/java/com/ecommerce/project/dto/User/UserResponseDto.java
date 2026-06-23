@@ -15,8 +15,10 @@ public class UserResponseDto {
     private String name;
     @JsonProperty("location")
     private String address;
+
     private String email;
     private String role;
+    @JsonProperty("contact_no")
     private String phone;
 
     @JsonProperty("created_at")

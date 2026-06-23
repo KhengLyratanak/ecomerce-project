@@ -1,6 +1,7 @@
 package com.ecommerce.project.Mapper;
 
 import com.ecommerce.project.Entity.User;
+import com.ecommerce.project.dto.User.ChangeUserPasswordDto;
 import com.ecommerce.project.dto.User.UserDto;
 import com.ecommerce.project.dto.User.UserResponseDto;
 import org.springframework.stereotype.Component;
@@ -27,8 +28,6 @@ public class UserMapper {
             return;
         }
         entity.setName(dto.getName());
-        entity.setEmail(dto.getEmail());
-        entity.setPassword(dto.getPassword());
         entity.setAddress(dto.getAddress());
         entity.setRole(dto.getRole());
     }
@@ -52,4 +51,8 @@ public class UserMapper {
                 .map(user -> this.toDto(user))
                 .collect(Collectors.toList());
     }
-}
+    public void updateEntityChangePassword(User entity,String password){
+        entity.setPassword(password);
+    }
+    }
+
