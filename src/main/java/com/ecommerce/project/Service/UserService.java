@@ -24,7 +24,7 @@ public class UserService {
     @Autowired
     private UserMapper mapper;
 
-    public ResponseEntity<BaseResponseModel> createUser(UserDto payload){
+    public void createdUser (UserDto payload){
         if(userRepository.existsByName(payload.getName())){
             throw new DuplicateResourceException("user already existed");
         }
@@ -34,60 +34,51 @@ public class UserService {
         User user = mapper.toEntity(payload);
 
         userRepository.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new BaseResponseModel("success","Successfully Created User"));
     }
-    public ResponseEntity<BaseResponseModelWithData> listUser(){
+
+    public List<UserResponseDto> listUser() {
         List<User> users = userRepository.findAll();
         List<UserResponseDto> dtos = mapper.toDtoList(users);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseModelWithData("success","successfully retrieve users",dtos));
+        return mapper.toDtoList(users);
     }
-    public ResponseEntity<BaseResponseModelWithData> getUser(Long userId){
+
+    public  UserResponseDto getUser(Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("user not found with id :"  +userId));
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(new BaseResponseModelWithData("success","successfully retrieved user id:",user));
+         return mapper.toDto(user);
     }
-    public ResponseEntity<BaseResponseModel> updateUser(UserDto payload,Long userId){
+    public void updateUser(UserDto payload,Long userId){
         User existing = userRepository.findById(userId)
         //if user not found show 404
                 .orElseThrow(() ->
                         new ResourceNotFoundException("user not found with id : "  +userId));
         mapper.updateEntityFromDto(existing,payload);
         userRepository.save(existing);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseModel("success","successfully updated user "));
+
     }
-    public ResponseEntity<BaseResponseModel> changePassword( ChangeUserPasswordDto dto,Long userId){
+    public void changePassword( ChangeUserPasswordDto dto,Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("user not found with id :" +userId));
         //if current password not the same with oldpassword
         if (!Objects.equals(user.getPassword(),dto.getOldPassword())){
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT)
-                    .body(new BaseResponseModel("fail" , "old password is incorrect,please return the correct password"));
+           throw new ResourceNotFoundException("old password is incorrect , please enter the correct password");
         }
         if (!Objects.equals(dto.getNewPassword(),dto.getConfirmPassword())){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new BaseResponseModel("fail","new password and confirm password must be the same"));
+          throw new ResourceNotFoundException("new password and confirm password must be the same");
         }
         mapper.updateEntityChangePassword(user,dto.getConfirmPassword());
         userRepository.save(user);
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseModel("success","successfully changed password"));
     }
-    public ResponseEntity<BaseResponseModel> deleteUser(Long userId){
+    public void deleteUser(Long userId){
         if (!userRepository.existsById(userId))
            throw new ResourceNotFoundException("user not found with id :"  +userId);
         //user found,then delete
         userRepository.deleteById(userId);
 
         //200 OK
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseModel("success","successfully deleted user"));
+
     }
 
 }

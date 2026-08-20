@@ -1,5 +1,7 @@
 package com.ecommerce.project.dto.User;
 
+import com.ecommerce.project.common.annotation.ValidEnum;
+import com.ecommerce.project.common.enums.role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -28,5 +30,6 @@ public class UserDto {
     @Size(min = 8,max = 12,message = "phone number must be between 8-12")
     private String phone;
 
-    private String role= "USER";
+    @ValidEnum(enumClass = role.class,message = "Role must be in [USER,ADMIN]")
+    private String role;
 }
