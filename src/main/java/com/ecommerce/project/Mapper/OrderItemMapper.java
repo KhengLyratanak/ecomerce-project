@@ -1,10 +1,8 @@
 package com.ecommerce.project.Mapper;
 
-import com.ecommerce.project.Entity.Order;
 import com.ecommerce.project.Entity.OrderItem;
 import com.ecommerce.project.Entity.Product;
-import com.ecommerce.project.Repository.OrderItemRepository;
-import com.ecommerce.project.Repository.ProductRepository;
+import com.ecommerce.project.repository.ProductRepository;
 import com.ecommerce.project.dto.Order.OrderItemDto;
 import com.ecommerce.project.dto.Order.OrderItemResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;

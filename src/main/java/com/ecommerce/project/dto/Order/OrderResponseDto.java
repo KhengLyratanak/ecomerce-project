@@ -1,7 +1,5 @@
 package com.ecommerce.project.dto.Order;
 
-import com.ecommerce.project.Entity.OrderItem;
-import com.ecommerce.project.Repository.OrderItemRepository;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
