@@ -1,11 +1,11 @@
-package com.ecommerce.project.Service;
+package com.ecommerce.project.service;
 
 
 import com.ecommerce.project.Mapper.SupplierMapper;
 import com.ecommerce.project.Model.BaseResponseModel;
-import com.ecommerce.project.Model.BaseResponseModelWithData;
-import com.ecommerce.project.Repository.SupplierRepository;
+import com.ecommerce.project.repository.SupplierRepository;
 import com.ecommerce.project.dto.supplier.SupplierDto;
+import com.ecommerce.project.dto.supplier.SupplierResponseDto;
 import com.ecommerce.project.exception.Model.DuplicateResourceException;
 import com.ecommerce.project.exception.Model.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +23,10 @@ public class SupplierService {
     @Autowired
     private SupplierMapper mapper;
 
-    public ResponseEntity<BaseResponseModelWithData> listSuppliers() {
+    public List<SupplierResponseDto> listSuppliers() {
         List<Supplier> suppliers = supplierRepository.findAll();
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(
-                        new BaseResponseModelWithData(
-                                "success",
-                                "successfully retrieved suppliers",
-                                mapper.toDtoList(suppliers)
-                        )
-                );
+        return mapper.toDtoList(suppliers);
     }
 
     public ResponseEntity<BaseResponseModel> createSupplier(SupplierDto payload) {
@@ -50,7 +43,7 @@ public class SupplierService {
                 .body(new BaseResponseModel("success","successfully created supplier"));
     }
 
-    public ResponseEntity<BaseResponseModel> updateSupplier(Long supplierId, SupplierDto dto) {
+    public void updateSupplier(Long supplierId, SupplierDto dto) {
         Supplier existingSupplier = supplierRepository.findById(supplierId)
 
                 // if supplier not found, return 404
@@ -61,19 +54,16 @@ public class SupplierService {
 
         supplierRepository.save(existingSupplier);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseModel("success","successfully updated supplier"));
     }
 
-    public ResponseEntity<BaseResponseModel> deleteSupplier(Long supplierId) {
+    public void deleteSupplier(Long supplierId) {
         if(!supplierRepository.existsById(supplierId)) {
             throw new ResourceNotFoundException("supplier not found with id:"  +supplierId);
         }
 
         supplierRepository.deleteById(supplierId);
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(new BaseResponseModel("success","successfully deleted supplier"));
+
     }
 
 

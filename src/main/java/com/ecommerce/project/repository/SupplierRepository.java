@@ -1,4 +1,4 @@
-package com.ecommerce.project.Repository;
+package com.ecommerce.project.repository;
 
 
 import com.ecommerce.project.Entity.Supplier;
