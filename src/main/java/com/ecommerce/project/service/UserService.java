@@ -1,18 +1,14 @@
-package com.ecommerce.project.Service;
+package com.ecommerce.project.service;
 
 import com.ecommerce.project.Entity.User;
 import com.ecommerce.project.Mapper.UserMapper;
-import com.ecommerce.project.Model.BaseResponseModel;
-import com.ecommerce.project.Model.BaseResponseModelWithData;
-import com.ecommerce.project.Repository.UserRepository;
+import com.ecommerce.project.repository.UserRepository;
 import com.ecommerce.project.dto.User.ChangeUserPasswordDto;
 import com.ecommerce.project.dto.User.UserDto;
 import com.ecommerce.project.dto.User.UserResponseDto;
 import com.ecommerce.project.exception.Model.DuplicateResourceException;
 import com.ecommerce.project.exception.Model.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -38,7 +34,6 @@ public class UserService {
 
     public List<UserResponseDto> listUser() {
         List<User> users = userRepository.findAll();
-        List<UserResponseDto> dtos = mapper.toDtoList(users);
         return mapper.toDtoList(users);
     }
 

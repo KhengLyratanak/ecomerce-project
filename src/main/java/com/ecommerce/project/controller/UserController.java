@@ -1,7 +1,7 @@
-package com.ecommerce.project.Controller;
+package com.ecommerce.project.controller;
 
 
-import com.ecommerce.project.Service.UserService;
+import com.ecommerce.project.service.UserService;
 import com.ecommerce.project.dto.User.ChangeUserPasswordDto;
 import com.ecommerce.project.dto.User.UserDto;
 import com.ecommerce.project.dto.User.UserResponseDto;
