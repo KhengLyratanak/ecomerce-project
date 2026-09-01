@@ -38,7 +38,7 @@ public class UserController {
     public ResponseEntity<Response> getUser(@PathVariable("user_id") Long userId){
         UserResponseDto user =  userService.getUser(userId);
          return ResponseEntity.status(HttpStatus.OK)
-                 .body(Response.success("200","success","successfully retrieved user id ",userId));
+                 .body(Response.success("200","success","successfully retrieved user id ",user));
     }
     @PutMapping("/{id}")
     public ResponseEntity<Response> updateUser(@RequestBody UserDto dto ,@PathVariable("id") Long userId ){
