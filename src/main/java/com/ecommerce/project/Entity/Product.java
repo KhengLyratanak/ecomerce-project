@@ -1,5 +1,6 @@
 package com.ecommerce.project.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,7 +36,10 @@ public class Product {
 
     @OneToMany(mappedBy = "product" ,fetch = FetchType.LAZY, cascade = CascadeType.ALL )
     List<Stock> stocks;
-
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    @JsonIgnore
+    private Category category;
     @PreUpdate
     public void preUpdate(){
         this.updatedAt = LocalDateTime.now();
