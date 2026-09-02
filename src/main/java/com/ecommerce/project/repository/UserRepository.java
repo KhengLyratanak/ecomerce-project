@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
@@ -14,6 +15,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
     List<User> findUserWithFilters(@Param("name") String name);
     Boolean existsByName(String name);
     Boolean existsByEmail(String email);
+
+    Optional<User> findByName(String username);
 }
 
 

@@ -8,17 +8,23 @@ import com.ecommerce.project.dto.User.UserDto;
 import com.ecommerce.project.dto.User.UserResponseDto;
 import com.ecommerce.project.exception.Model.DuplicateResourceException;
 import com.ecommerce.project.exception.Model.ResourceNotFoundException;
+import com.ecommerce.project.service.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private UserMapper mapper;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     public void createdUser (UserDto payload){
         if(userRepository.existsByName(payload.getName())){
@@ -41,6 +47,8 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("user not found with id :"  +userId));
+       String token = jwtUtil.generateToken(user);
+       System.out.println("Token: " +token);
          return mapper.toDto(user);
     }
     public void updateUser(UserDto payload,Long userId){
@@ -76,4 +84,11 @@ public class UserService {
 
     }
 
-}
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByName(username)
+                .orElseThrow(() -> {
+                    throw new UsernameNotFoundException("user not found: " + username);
+                });
+    }
+    }
