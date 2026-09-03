@@ -2,6 +2,7 @@ package com.ecommerce.project.service;
 
 import com.ecommerce.project.Entity.User;
 import com.ecommerce.project.Mapper.UserMapper;
+import com.ecommerce.project.dto.auth.AuthDto;
 import com.ecommerce.project.repository.UserRepository;
 import com.ecommerce.project.dto.User.ChangeUserPasswordDto;
 import com.ecommerce.project.dto.User.UserDto;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -26,17 +28,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    public void createdUser (UserDto payload){
-        if(userRepository.existsByName(payload.getName())){
-            throw new DuplicateResourceException("user already existed");
-        }
-        if (userRepository.existsByEmail(payload.getEmail())){
-            throw new DuplicateResourceException("email already existed");
-        }
-        User user = mapper.toEntity(payload);
 
-        userRepository.save(user);
-    }
 
     public List<UserResponseDto> listUser() {
         List<User> users = userRepository.findAll();
@@ -90,5 +82,8 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> {
                     throw new UsernameNotFoundException("user not found: " + username);
                 });
+    }
+    public void login(AuthDto payload){
+
     }
     }
