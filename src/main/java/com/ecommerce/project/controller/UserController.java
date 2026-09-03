@@ -19,13 +19,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping
-    public ResponseEntity<Response> createUser(@RequestBody UserDto payload){
-         userService.createdUser(payload);
-
-         return ResponseEntity.status(HttpStatus.CREATED)
-                 .body(Response.success("201","success","successfully created user"));
-    }
     @GetMapping
     public ResponseEntity<Response> listUser(){
 
